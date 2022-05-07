@@ -1,0 +1,9 @@
+[submodule "thirdparty/abseil-cpp"]
+	path = thirdparty/abseil-cpp
+	url = https://github.com/abseil/abseil-cpp.git
+[submodule "thirdparty/spdlog"]
+	path = thirdparty/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "thirdparty/utf8proc"]
+	path = thirdparty/utf8proc
+	url = https://github.com/JuliaStrings/utf8proc.git
