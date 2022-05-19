@@ -54,6 +54,7 @@ int Viterbi::compute() {
 
     return 1;
 }
+
 int main() {
     printf("start viterbi decode");
     vector<int> states = {0, 1};

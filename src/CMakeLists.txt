@@ -5,12 +5,22 @@ list(APPEND NLPTOOL_LIBS absl::flags_parse)
 list(APPEND NLPTOOL_LIBS utf8proc)
 list(APPEND NLPTOOL_LIBS spdlog)
 
-
 message(STATUS "libnlptools using libs: ${NLPTOOL_LIBS}")
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
+# boost库
+find_package(Boost COMPONENTS filesystem system REQUIRED)
+if(NOT Boost_FOUND)
+MESSAGE( STATUS "BOOST NOT FOUND PLEASE install BOOST")
+else()
+include_directories(${Boost_INCLUDE_DIRS})
+MESSAGE( STATUS "Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
+MESSAGE( STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}.")
+MESSAGE( STATUS "Boost_LIB_VERSION = ${Boost_LIB_VERSION}.")
+endif()
+
 
 set(THIRDPARTY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty)
 message(STATUS "libnlptools include thirdparty path :${THIRDPARTY_INCLUDE_DIR}")
@@ -30,19 +40,34 @@ set(TOOL_SRC
     leetcode.cc
     tokenizer.cc
 )
-set(VITERBI_SRC
-    viterbi.h
-    viterbi.cc
+# set(VITERBI_SRC
+#     viterbi.h
+#     viterbi.cc
+# )
+
+# add_executable(viterbi ${VITERBI_SRC})
+
+# 动态库
+if (LIBNLP_ENABLE_SHARED)
+  set(ORIGIN_DYNAMIC_LIB_NAME ${PROJECT_NAME}-dynamic)
+  add_library(${ORIGIN_DYNAMIC_LIB_NAME} SHARED ${TOOL_SRC})
+  message(STATUS "building dynamic lib ${ORIGIN_DYNAMIC_LIB_NAME}")
+  set_target_properties(${ORIGIN_DYNAMIC_LIB_NAME} PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+  target_link_libraries(${ORIGIN_DYNAMIC_LIB_NAME} PRIVATE  ${NLPTOOL_LIBS})
+endif()
+# 静态库
+add_library(${PROJECT_NAME} STATIC ${TOOL_SRC})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${NLPTOOL_LIBS})
+
+set(
+  TEST_SRC
+  testharness.h
+  tokenizer_test.cc
 )
 
-add_executable(viterbi ${VITERBI_SRC})
-
-add_library(nlptool STATIC ${TOOL_SRC})
-target_link_libraries(nlptool PRIVATE ${NLPTOOL_LIBS})
-
-if (LIBNLP_ENABLE_SHARED)
-  add_library(nlptool SHARED ${TOOL_SRC})
+if(LIBNLP_ENABLE_TEST)
+  include(GoogleTest)
+  add_executable(DemoTest ${TEST_SRC})
+  target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main ${Boost_LIBRARIES})
+  gtest_discover_tests(DemoTest)
 endif()
-
-# add_executable(Demo main.cc)
-# target_link_libraries(Demo nlptool)

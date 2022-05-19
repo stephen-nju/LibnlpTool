@@ -111,7 +111,6 @@ void Solution::quickSort(int arr[], int left, int right) {
     if (left >= right) {
         return;
     }
-
     int pivot_index = partition(arr, left, right);
     Solution::quickSort(arr, left, pivot_index - 1);
     Solution::quickSort(arr, pivot_index + 1, right);
