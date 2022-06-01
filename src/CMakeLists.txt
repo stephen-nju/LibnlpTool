@@ -11,13 +11,15 @@ message(STATUS "libnlptools using libs: ${NLPTOOL_LIBS}")
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
-# boost库
-#set(BOOST_ROOT "C:\\Program Files\\boost\\boost_1_79_0")
-#set(BOOST_LIBRARYDIR "C:\\Program Files\\boost\\boost_1_79_0\\stage\\lib")
 
 
 #Always use the static libs on Windows.
 if(WIN32)
+  # Boost headers contain #pragma commands on Windows which causes Boost
+  # libraries to be linked in automatically. Custom boost installations
+  # may find that these naming conventions don't always match and can
+  # cause linker errors. This option disables this feature of Boost. Note
+  # -DBOOST_ALL_NO_LIB can also be provided manually.
    set(Boost_USE_STATIC_LIBS ON)
 else()
    set(Boost_USE_STATIC_LIBS OFF)
@@ -26,7 +28,6 @@ endif(WIN32)
 
 find_package(Boost COMPONENTS filesystem REQUIRED)
 if(Boost_FOUND)
-
     add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
     include_directories(${Boost_INCLUDE_DIRS})
     MESSAGE( STATUS "Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
@@ -38,7 +39,7 @@ endif()
 
 
 set(THIRDPARTY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty)
-message(STATUS "libnlptools include thirdparty path :${THIRDPARTY_INCLUDE_DIR}")
+message(STATUS "libnlptools include thirdparty path = ${THIRDPARTY_INCLUDE_DIR}")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include/libnlptool)
 
@@ -46,7 +47,6 @@ include_directories(
     ${THIRDPARTY_INCLUDE_DIR}/utf8proc
     ${THIRDPARTY_INCLUDE_DIR}/abseil-cpp
     ${THIRDPARTY_INCLUDE_DIR}/spdlog/include
-
 )
 
 
@@ -97,7 +97,6 @@ if(LIBNLP_ENABLE_TEST)
   include(GoogleTest)
   add_executable(DemoTest ${TEST_SRC})
   target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main ${Boost_LIBRARIES})
-
   gtest_discover_tests(DemoTest)
 endif()
 
