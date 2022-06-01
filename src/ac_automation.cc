@@ -1,20 +1,17 @@
-
+﻿
 #include "ac_automation.h"
 
-Automation::Automation()
-{   
+Automation::Automation() {
     // 构造函数
     root = new Node;
 }
 
-Automation::~Automation()
-{ 
+Automation::~Automation() {
     // 析构函数
     delete root;
 }
 
-void Automation::splitWord(const string &word, int &wordLength, vector <string> &characters)
-{
+void Automation::splitWord(const string& word, int& wordLength, vector<string>& characters) {
     int wordSize = word.size();
 
     int i = 0;
@@ -39,8 +36,7 @@ void Automation::splitWord(const string &word, int &wordLength, vector <string> 
     }
 }
 
-Node* Automation::getNext(Node *current, string &character)
-{
+Node* Automation::getNext(Node* current, string& character) {
     map<string, Node*>::iterator item = current->next.find(character);
 
     if (item != current->next.end()) {
@@ -54,13 +50,12 @@ Node* Automation::getNext(Node *current, string &character)
     return 0;
 }
 
-void Automation::add(const string &word)
-{
+void Automation::add(const string& word) {
     int wordLength = 0;
     vector<string> characters;
     splitWord(word, wordLength, characters);
 
-    Node *temp = root;
+    Node* temp = root;
 
     int i = 1;
     string pathWord = "";
@@ -69,10 +64,10 @@ void Automation::add(const string &word)
         pathWord.append(*character);
         map<string, Node*>::iterator item = temp->next.find(*character);
 
-        if (item != temp->next.end()) {   // 中间节点，指针移到下一节点
+        if (item != temp->next.end()) {  // 中间节点，指针移到下一节点
             temp = item->second;
-        } else {                          // 尾节点，添加新的节点
-            Node *n = new Node;
+        } else {  // 尾节点，添加新的节点
+            Node* n = new Node;
             n->word = pathWord;
             n->wordLength = i;
             temp->next.insert(make_pair(*character, n));
@@ -88,18 +83,17 @@ void Automation::add(const string &word)
     }
 }
 
-void Automation::build()
-{
+void Automation::build() {
     queue<Node*> Q;
 
     // 将第一级节点的所有失配指针都设置为root 并将所有第一级节点加入队列
-    for (map<string, Node*>::iterator item = root->next.begin(); item != root->next.end(); ++ item) {
+    for (map<string, Node*>::iterator item = root->next.begin(); item != root->next.end(); ++item) {
         item->second->fail = root;
         Q.push(item->second);
     }
 
     instances.clear();
-    //instances.push_back(root);
+    // instances.push_back(root);
 
     // 遍历队列
     while (!Q.empty()) {
@@ -107,7 +101,7 @@ void Automation::build()
         Q.pop();
 
         // 遍历当前节点的下一节点
-        for (map<string, Node*>::iterator item = temp->next.begin(); item != temp->next.end(); ++ item) {
+        for (map<string, Node*>::iterator item = temp->next.begin(); item != temp->next.end(); ++item) {
             // 键值
             string character = item->first;
 
@@ -115,10 +109,12 @@ void Automation::build()
             Q.push(item->second);
 
             // 设置失配指针 从上一节点的失配指针查起
-            Node  *parent = temp->fail;
-            while (!getNext(parent, character)) parent = parent->fail;
+            Node* parent = temp->fail;
+            while (!getNext(parent, character))
+                parent = parent->fail;
             item->second->fail = getNext(parent, character);
-            if (!getNext(parent, character)) throw 1;
+            if (!getNext(parent, character))
+                throw 1;
         }
 
         // 存储尾节点
@@ -128,13 +124,12 @@ void Automation::build()
     }
 }
 
-bool Automation::match(const string &buf)
-{
+bool Automation::match(const string& buf) {
     int bufLength = 0;
     vector<string> characters;
     splitWord(buf, bufLength, characters);
 
-    Node *temp = root;
+    Node* temp = root;
     // 遍历字符串
     for (vector<string>::iterator character = characters.begin(); character != characters.end(); ++character) {
         while (!getNext(temp, *character)) {
@@ -150,48 +145,46 @@ bool Automation::match(const string &buf)
     return false;
 }
 
-void Automation::search(const string &buf, map<string, Node*> &nodes)
-{
+void Automation::search(const string& buf, map<string, Node*>& nodes) {
     int bufLength = 0;
     vector<string> characters;
     splitWord(buf, bufLength, characters);
 
     int index = 0;
 
-    Node *temp = root;
+    Node* temp = root;
     // 遍历字符串
     for (vector<string>::iterator character = characters.begin(); character != characters.end(); ++character) {
-
         while (!getNext(temp, *character)) {
             temp = temp->fail;
         }
 
         temp = getNext(temp, *character);
 
-        if (temp->matched) { //如果匹配
+        if (temp->matched) {  //如果匹配
             map<string, Node*>::iterator nodeFind = nodes.find(temp->word);
             if (nodeFind == nodes.end()) {
                 temp->repeats = 1;
-                temp->index   = index + 1 - temp->wordLength ;
+                temp->index = index + 1 - temp->wordLength;
                 nodes.insert(make_pair(temp->word, temp));
             } else {
                 nodeFind->second->repeats += 1;
             }
         }
-        ++ index;
+        ++index;
     }
 }
 
-void Automation::print()
-{
-    int n = 0;
-    for (vector<Node*>::iterator node = instances.begin(); node != instances.end(); ++node ) {
-        ++n;
-        cout << "--------------------------------" << endl;
-        cout << "编号 : " << n << endl;
-        cout << "分词 ：" << (*node)->word << endl;
-        cout << "长度 : " << (*node)->wordLength << endl;
-        cout << "尾点 : " << ((*node)->matched ? "是" : "否") << endl;
-    }
-    cout << "--------------------------------" << endl;
-}
+// void Automation::print()
+//{
+//     int n = 0;
+//     for (vector<Node*>::iterator node = instances.begin(); node != instances.end(); ++node ) {
+//         ++n;
+//         cout << "--------------------------------" << endl;
+//         cout << "编号 : " << n << endl;
+//         cout << "分词 ：" << (*node)->word << endl;
+//         cout << "长度 : " << (*node)->wordLength << endl;
+//         cout << "尾点 : " << ((*node)->matched ? "是" : "否") << endl;
+//     }
+//     cout << "--------------------------------" << endl;
+// }

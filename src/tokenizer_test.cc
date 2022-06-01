@@ -1,3 +1,4 @@
+﻿
 #include "tokenizer.h"
 
 #include <memory>
@@ -58,7 +59,7 @@ TEST(FullTokenizerTest, TokenizeTest) {
                                  {"un", 1},
                                  {"runn", 1},
                                  {"##ing", 1},
-                                 {",", 1},
+                                 //{",", 1},
                                  {"中", 1}};
 
     nlptools::tokenizer::FullTokenizer* tokenizer = new nlptools::tokenizer::FullTokenizer(v);
@@ -75,7 +76,7 @@ TEST(FullTokenizerTest, TokenizeTest) {
 
     delete tokenizer;
 }
-
+//
 TEST(BertTokenizerTest, TokenizeTest) {
     // #ifdef OS_WIN
     //     _mkdir(absl::GetFlag(FLAGS_test_tmpdir).c_str());
@@ -140,9 +141,8 @@ TEST(BertTokenizerTest, TokenizeTest) {
 //             {"##ing", 1}};
 
 //     WordpieceTokenizer* wtokenizer = new WordpieceTokenizer(v);
-
-//     vector<string> o = wtokenizer->tokenizer_word("unwantedX");
-//     for (auto s : o) {
-//         spdlog::info("{}\n", s);
-//     }
-// }
+// vector<string> o = wtokenizer->tokenizer_word("unwantedX");
+// for (auto s : o) {
+//    spdlog::info("{}\n", s);
+//}
+//}

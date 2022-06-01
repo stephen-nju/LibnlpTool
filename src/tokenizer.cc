@@ -1,4 +1,4 @@
-
+﻿
 #include "tokenizer.h"
 
 #include <cstring>
@@ -32,7 +32,7 @@ Vocab load_vocab(const char* vocab_file) {
     }
     return vocab;
 }
-
+//
 bool BasicTokenizer::_is_whitespace(int c) const {
     const char* cat = utf8proc_category_string(c);
     if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
@@ -84,7 +84,7 @@ bool BasicTokenizer::_is_accents_char(int cp) const {
     }
     return false;
 }
-
+//
 vector<string> BasicTokenizer::tokenizer(const string& text) const {
     vector<string> output;
     // 去除前后空格

@@ -1,0 +1,32 @@
+﻿{
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "variables": [
+        {
+          "name": "BOOST_ROOT",
+          "value": "C:\\local\\boost_1_77_0",
+          "type": "PATH"
+        },
+        {
+          "name": "UTF8PROC_ENABLE_TESTING",
+          "value": "false",
+          "type": "BOOL"
+        },
+        {
+          "name": "Boost_DEBUG",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ],
+      "intelliSenseMode": "windows-msvc-x64"
+    }
+  ]
+}
