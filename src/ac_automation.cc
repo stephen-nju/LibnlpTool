@@ -1,4 +1,4 @@
-﻿
+
 #include "ac_automation.h"
 
 Automation::Automation() {

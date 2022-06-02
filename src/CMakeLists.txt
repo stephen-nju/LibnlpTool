@@ -13,23 +13,30 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-#Always use the static libs on Windows.
-if(WIN32)
-  # Boost headers contain #pragma commands on Windows which causes Boost
+# # Always use the static libs on Windows.
+# if (MSVC AND WIN32)
+#   # set (Boost_USE_MULTITHREADED ON)
+#   set (Boost_USE_STATIC_LIBS ON)
+# else ()
+#   # set (Boost_USE_MULTITHREADED OFF)
+#   set (Boost_USE_STATIC_LIBS OFF)
+# endif () 
+
+# if (NOT Boost_USE_STATIC_LIBS)
+#   add_definitions (/DBOOST_TEST_DYN_LINK)
+# endif ()
+# Boost headers contain #pragma commands on Windows which causes Boost
   # libraries to be linked in automatically. Custom boost installations
   # may find that these naming conventions don't always match and can
   # cause linker errors. This option disables this feature of Boost. Note
   # -DBOOST_ALL_NO_LIB can also be provided manually.
-   set(Boost_USE_STATIC_LIBS ON)
-else()
-   set(Boost_USE_STATIC_LIBS OFF)
-endif(WIN32)
 
 
 find_package(Boost COMPONENTS filesystem REQUIRED)
 if(Boost_FOUND)
-    add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
+    # add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
     include_directories(${Boost_INCLUDE_DIRS})
+    message(STATUS "Boost_LIB_DIAGNOSTIC_DEFINITIONS=${Boost_LIB_DIAGNOSTIC_DEFINITIONS}" )
     MESSAGE( STATUS "Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
     MESSAGE( STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}.")
     MESSAGE( STATUS "Boost_LIB_VERSION = ${Boost_LIB_VERSION}.")
@@ -96,7 +103,9 @@ set(
 if(LIBNLP_ENABLE_TEST)
   include(GoogleTest)
   add_executable(DemoTest ${TEST_SRC})
-  target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main ${Boost_LIBRARIES})
+  target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main)
+  target_link_libraries(DemoTest Boost::filesystem Boost::diagnostic_definitions Boost::dynamic_linking)
+  
   gtest_discover_tests(DemoTest)
 endif()
 

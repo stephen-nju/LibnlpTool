@@ -59,7 +59,7 @@ TEST(FullTokenizerTest, TokenizeTest) {
                                  {"un", 1},
                                  {"runn", 1},
                                  {"##ing", 1},
-                                 //{",", 1},
+                                 {",", 1},
                                  {"中", 1}};
 
     nlptools::tokenizer::FullTokenizer* tokenizer = new nlptools::tokenizer::FullTokenizer(v);
