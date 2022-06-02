@@ -10,15 +10,9 @@ option(LIBNLP_ENABLE_SHARED "Builds shared libaries in addition to static librar
 message(STATUS "LIBNLP_ENABLE_SHARED= ${LIBNLP_ENABLE_SHARED}")
 option(LIBNLP_ENABLE_TEST "enable test " ON)
 
-# if(MSVC)
-#   string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_DEBUG          ${CMAKE_CXX_FLAGS_DEBUG})
-#   string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_MINSIZEREL     ${CMAKE_CXX_FLAGS_MINSIZEREL})
-#   string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE        ${CMAKE_CXX_FLAGS_RELEASE})
-#   string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELWITHDEBINFO})
-#   add_definitions("/wd4267 /wd4244 /wd4305 /Zc:strictStrings /utf-8")
-#   # 添加编译选项
-# endif()
-
+if(LIBNLP_ENABLE_TEST)
+    enable_testing()
+endif(LIBNLP_ENABLE_TEST)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

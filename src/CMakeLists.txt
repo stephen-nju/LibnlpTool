@@ -100,13 +100,11 @@ set(
   tokenizer_test.cc
 )
 
-if(LIBNLP_ENABLE_TEST)
-  include(GoogleTest)
-  add_executable(DemoTest ${TEST_SRC})
-  target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main)
-  target_link_libraries(DemoTest Boost::filesystem Boost::diagnostic_definitions Boost::dynamic_linking)
-  
-  gtest_discover_tests(DemoTest)
-endif()
+
+include(GoogleTest)
+add_executable(DemoTest ${TEST_SRC})
+target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main)
+target_link_libraries(DemoTest Boost::filesystem Boost::diagnostic_definitions Boost::disable_autolinking Boost::dynamic_linking)
+gtest_add_tests(TARGET DemoTest)
 
 add_subdirectory(model)
