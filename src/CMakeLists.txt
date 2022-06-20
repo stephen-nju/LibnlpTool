@@ -13,14 +13,14 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 
-# # Always use the static libs on Windows.
-# if (MSVC AND WIN32)
-#   # set (Boost_USE_MULTITHREADED ON)
-#   set (Boost_USE_STATIC_LIBS ON)
-# else ()
-#   # set (Boost_USE_MULTITHREADED OFF)
-#   set (Boost_USE_STATIC_LIBS OFF)
-# endif () 
+# Always use the static libs on Windows. windows上的动态链接找不到解决方案
+  if (MSVC AND WIN32)
+    set (Boost_USE_MULTITHREADED ON)
+    set (Boost_USE_STATIC_LIBS ON)
+  else ()
+    set (Boost_USE_MULTITHREADED OFF)
+    set (Boost_USE_STATIC_LIBS OFF)
+  endif () 
 
 # if (NOT Boost_USE_STATIC_LIBS)
 #   add_definitions (/DBOOST_TEST_DYN_LINK)
@@ -101,10 +101,14 @@ set(
 )
 
 
-include(GoogleTest)
-add_executable(DemoTest ${TEST_SRC})
-target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main)
-target_link_libraries(DemoTest Boost::filesystem Boost::diagnostic_definitions Boost::disable_autolinking Boost::dynamic_linking)
-gtest_add_tests(TARGET DemoTest)
+if(LIBNLP_ENABLE_TEST)
+  enable_testing()
+  include(GoogleTest)
+  add_executable(DemoTest ${TEST_SRC})
+  target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main)  
+  target_link_libraries(DemoTest Boost::filesystem)
+  gtest_add_tests(TARGET DemoTest)
+endif(LIBNLP_ENABLE_TEST)
+
 
 add_subdirectory(model)

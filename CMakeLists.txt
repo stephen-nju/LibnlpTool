@@ -10,9 +10,7 @@ option(LIBNLP_ENABLE_SHARED "Builds shared libaries in addition to static librar
 message(STATUS "LIBNLP_ENABLE_SHARED= ${LIBNLP_ENABLE_SHARED}")
 option(LIBNLP_ENABLE_TEST "enable test " ON)
 
-if(LIBNLP_ENABLE_TEST)
-    enable_testing()
-endif(LIBNLP_ENABLE_TEST)
+
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
