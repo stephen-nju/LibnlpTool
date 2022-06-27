@@ -14,35 +14,35 @@ endif()
 
 
 # Always use the static libs on Windows. windows上的动态链接找不到解决方案
-  if (MSVC AND WIN32)
-    set (Boost_USE_MULTITHREADED ON)
-    set (Boost_USE_STATIC_LIBS ON)
-  else ()
-    set (Boost_USE_MULTITHREADED OFF)
-    set (Boost_USE_STATIC_LIBS OFF)
-  endif () 
+# if (MSVC AND WIN32)
+#   # set (Boost_USE_MULTITHREADED ON)
+#   set (Boost_USE_STATIC_LIBS ON)
+# else ()
+#   # set (Boost_USE_MULTITHREADED OFF)
+#   set (Boost_USE_STATIC_LIBS OFF)
+# endif () 
 
-# if (NOT Boost_USE_STATIC_LIBS)
-#   add_definitions (/DBOOST_TEST_DYN_LINK)
-# endif ()
-# Boost headers contain #pragma commands on Windows which causes Boost
-  # libraries to be linked in automatically. Custom boost installations
-  # may find that these naming conventions don't always match and can
-  # cause linker errors. This option disables this feature of Boost. Note
-  # -DBOOST_ALL_NO_LIB can also be provided manually.
+# # if (NOT Boost_USE_STATIC_LIBS)
+# #   add_definitions (/DBOOST_TEST_DYN_LINK)
+# # endif ()
+# # Boost headers contain #pragma commands on Windows which causes Boost
+#   # libraries to be linked in automatically. Custom boost installations
+#   # may find that these naming conventions don't always match and can
+#   # cause linker errors. This option disables this feature of Boost. Note
+#   # -DBOOST_ALL_NO_LIB can also be provided manually.
 
 
-find_package(Boost COMPONENTS filesystem REQUIRED)
-if(Boost_FOUND)
-    # add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
-    include_directories(${Boost_INCLUDE_DIRS})
-    message(STATUS "Boost_LIB_DIAGNOSTIC_DEFINITIONS=${Boost_LIB_DIAGNOSTIC_DEFINITIONS}" )
-    MESSAGE( STATUS "Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
-    MESSAGE( STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}.")
-    MESSAGE( STATUS "Boost_LIB_VERSION = ${Boost_LIB_VERSION}.")
-else()
-    MESSAGE( FATAL_ERROR  "BOOST NOT FOUND PLEASE install BOOST")
-endif()
+# find_package(Boost 1.79 REQUIRED COMPONENTS date_time filesystem)
+# if(Boost_FOUND)
+#     # add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
+#     include_directories(${Boost_INCLUDE_DIRS})
+#     message(STATUS "Boost_LIB_DIAGNOSTIC_DEFINITIONS=${Boost_LIB_DIAGNOSTIC_DEFINITIONS}" )
+#     MESSAGE( STATUS "Boost_INCLUDE_DIRS = ${Boost_INCLUDE_DIRS}.")
+#     MESSAGE( STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}.")
+#     MESSAGE( STATUS "Boost_LIB_VERSION = ${Boost_LIB_VERSION}.")
+# else()
+#     MESSAGE( FATAL_ERROR  "BOOST NOT FOUND PLEASE install BOOST")
+# endif()
 
 
 set(THIRDPARTY_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty)
@@ -93,22 +93,6 @@ endif()
 
 add_library(${PROJECT_NAME} STATIC ${TOKENIZER_SRC})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${NLPTOOL_LIBS})
-
-set(
-  TEST_SRC
-  testharness.h
-  tokenizer_test.cc
-)
-
-
-if(LIBNLP_ENABLE_TEST)
-  enable_testing()
-  include(GoogleTest)
-  add_executable(DemoTest ${TEST_SRC})
-  target_link_libraries(DemoTest ${PROJECT_NAME} gtest_main)  
-  target_link_libraries(DemoTest Boost::filesystem)
-  gtest_add_tests(TARGET DemoTest)
-endif(LIBNLP_ENABLE_TEST)
 
 
 add_subdirectory(model)

@@ -79,6 +79,7 @@ int Solution::diameterOfBinaryTree(TreeNode* root) {
     return diameter;
 }
 
+// 快排
 inline void swap(int arr[], int x, int y) {
     int temp;
     temp = arr[x];
@@ -122,5 +123,29 @@ void Solution::quickSort(int arr[], int length) {
     };
     Solution::quickSort(arr, 0, length - 1);
 }
+
+int64_t intPartition() {
+    // dp数组dp[i][j]表示选i个数，数字和为j的多有方法的数目
+    // 需要保证每个整数只被选择一次
+    int64_t dp[10][2022];
+
+    for (int j = 0; j < 2022; j++) {
+        dp[0][j] = 0;
+    }
+
+    for (int i = 0; i < 10; i++) {
+        dp[i][0] = 0;
+    }
+    for (int i = 0; i < 10; i++) {
+        for (int j = 0; j < 2022; j++) {
+            for (int k = 0; k < 2022; k++) {
+                if (k < j) {
+                    dp[i][j] += dp[i - 1][j - k]
+                }
+            }
+        }
+
+        return dp[10][2022];
+    }
 
 }  // namespace leetcode

@@ -25,6 +25,9 @@ public:
 
     void quickSort(int arr[], int length);
 
+    // 蓝桥杯2022 ，c组整数拆分
+    int64_t intPartition();
+
 private:
     void quickSort(int arr[], int left, int right);
 };
