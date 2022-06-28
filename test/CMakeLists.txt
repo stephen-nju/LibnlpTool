@@ -45,7 +45,6 @@ else()
 endif()
 
 
-
 if(LIBNLP_ENABLE_TEST)
   enable_testing()
   include(GoogleTest)
@@ -54,3 +53,6 @@ if(LIBNLP_ENABLE_TEST)
   target_link_libraries(DemoTest Boost::filesystem)
   gtest_add_tests(TARGET DemoTest)
 endif(LIBNLP_ENABLE_TEST)
+
+add_executable(leetcode leetcode_test.cc)
+target_link_libraries(leetcode ${PROJECT_NAME})

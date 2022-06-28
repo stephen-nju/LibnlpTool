@@ -6,7 +6,9 @@ namespace leetcode {
 int Solution::minDistance(string word1, string word2) {
     int m = word1.size();
     int n = word2.size();
-    int dp[m + 1][n + 1];
+    // int dp[m + 1][n + 1];
+
+    vector<vector<int>> dp;
     for (int i = 0; i <= m; i++) {
         dp[i][0] = i;
     }
@@ -18,7 +20,7 @@ int Solution::minDistance(string word1, string word2) {
             if (word1[i - 1] == word2[j - 1]) {
                 dp[i][j] = dp[i - 1][j - 1];
             } else {
-                dp[i][j] = min(dp[i - 1][j] + 1, min(dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1));
+                dp[i][j] = std::min(dp[i - 1][j] + 1, std::min(dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1));
             }
         }
     }
@@ -27,7 +29,8 @@ int Solution::minDistance(string word1, string word2) {
 bool Solution::isMatch(string s, string p) {
     int m = s.size();
     int n = p.size();
-    bool dp[m][n];
+    // bool dp[m][n];
+    vector<vector<bool>> dp;
     dp[0][0] = true;
     // 初始化数组
     for (int i = 1; i < m + 1; i++) {
@@ -66,8 +69,8 @@ int maxDepth(TreeNode* root, int* diameter) {
 
     int left_depth = maxDepth(root->left, diameter);
     int right_depth = maxDepth(root->right, diameter);
-    *diameter = max(right_depth + left_depth, *diameter);
-    return max(left_depth, right_depth) + 1;
+    *diameter = std::max(right_depth + left_depth, *diameter);
+    return std::max(left_depth, right_depth) + 1;
 }
 
 int Solution::diameterOfBinaryTree(TreeNode* root) {
@@ -124,28 +127,18 @@ void Solution::quickSort(int arr[], int length) {
     Solution::quickSort(arr, 0, length - 1);
 }
 
-int64_t intPartition() {
-    // dp数组dp[i][j]表示选i个数，数字和为j的多有方法的数目
-    // 需要保证每个整数只被选择一次
-    int64_t dp[10][2022];
-
-    for (int j = 0; j < 2022; j++) {
-        dp[0][j] = 0;
-    }
-
-    for (int i = 0; i < 10; i++) {
-        dp[i][0] = 0;
-    }
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 2022; j++) {
-            for (int k = 0; k < 2022; k++) {
-                if (k < j) {
-                    dp[i][j] += dp[i - 1][j - k]
-                }
+int64_t Solution::intPartition() {
+    // dp[i][j][k] i个数总和为j并且第i位数字为k的方案数目
+    int64_t dp[2022 + 1][10 + 1] = {0};
+    dp[0][0] = 1;
+    for (int i = 1; i <= 2022; i++) {
+        for (int j = 2022; j >= i; j--) {
+            for (int k = 1; k <= 10; k++) {
+                dp[j][k] += dp[j - i][k - 1];
             }
         }
-
-        return dp[10][2022];
     }
+    return dp[2022][10];
+}
 
 }  // namespace leetcode

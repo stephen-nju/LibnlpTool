@@ -1,9 +1,13 @@
 #ifndef LEET_CODE_H
 #define LEET_CODE_H
+#include <algorithm>
 #include <cstdio>
 #include <string>
+#include <vector>
+#include <cstdint>
 
-using namespace std;
+using std::string;
+using std::vector;
 namespace leetcode {
 
 struct TreeNode {
