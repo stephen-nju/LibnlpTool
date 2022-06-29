@@ -128,17 +128,73 @@ void Solution::quickSort(int arr[], int length) {
 }
 
 int64_t Solution::intPartition() {
-    // dp[i][j][k] i个数总和为j并且第i位数字为k的方案数目
-    int64_t dp[2022 + 1][10 + 1] = {0};
-    dp[0][0] = 1;
-    for (int i = 1; i <= 2022; i++) {
-        for (int j = 2022; j >= i; j--) {
-            for (int k = 1; k <= 10; k++) {
-                dp[j][k] += dp[j - i][k - 1];
+    const int N = 10;
+    const int M = 100;
+    // 创建动态数组dp[M+1][N+1][M+1]
+    int64_t*** dp;
+    dp = new int64_t**[M + 1];
+    for (int i = 0; i < M + 1; i++) {
+        dp[i] = new int64_t*[N + 1];
+    }
+    for (int i = 0; i < M + 1; i++) {
+        for (int j = 0; j < N + 1; j++) {
+            dp[i][j] = new int64_t[M + 1];
+        }
+    }
+    for (int i = 0; i < M + 1; i++) {
+        for (int j = 0; j < N + 1; j++) {
+            for (int k = 0; k < M + 1; k++) {
+                // Assign values to the
+                // memory blocks created
+                dp[i][j][k] = 0;
             }
         }
     }
-    return dp[2022][10];
+    // int64_t dp[M + 1][N + 1][M + 1] = {0};
+    // dp[0][0][0] = 1;
+    int64_t ans = 0;
+    dp[0][0][0] = 1;
+    for (int i = 1; i <= M; i++) {
+        for (int j = 0; j <= N; j++) {
+            for (int k = 0; k <= M; k++) {
+                if (k >= i && j >= 1) {
+                    // 第i个数字小于总和
+
+                    dp[i][j][k] = dp[i - 1][j][k] + dp[i - 1][j - 1][k - i];
+
+                } else {
+                    // 第i个数字大于总和
+
+                    dp[i][j][k] = dp[i - 1][j][k];
+                }
+            }
+        }
+    }
+
+    ans = dp[M][N][M];
+    // Deallocate memory
+    for (int i = 0; i < M + 1; i++) {
+        for (int j = 0; j < N + 1; j++) {
+            delete[] dp[i][j];
+        }
+        delete[] dp[i];
+    }
+    delete[] dp;
+
+    // ***************空间优化方案**********************///
+    // dp[i][j][k] i个数总和为j并且第i位数字为k的方案数目
+    // int64_t dp[2022 + 1][10 + 1] = {0};
+    // dp[0][0] = 1;
+    // for (int i = 1; i <= 2022; i++) {
+    //     for (int j = 2022; j >= i; j--) {
+    //         for (int k = 1; k <= 10; k++) {
+    //             dp[j][k] += dp[j - i][k - 1];
+    //         }
+    //     }
+    // }
+    // return dp[2022][10];
+
+    return ans;
 }
 
 }  // namespace leetcode

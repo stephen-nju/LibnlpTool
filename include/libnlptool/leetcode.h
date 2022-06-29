@@ -29,7 +29,7 @@ public:
 
     void quickSort(int arr[], int length);
 
-    // 蓝桥杯2022 ，c组整数拆分
+    // 蓝桥杯2022 ，c组整数拆分(二维背包问题)
     int64_t intPartition();
 
 private:
